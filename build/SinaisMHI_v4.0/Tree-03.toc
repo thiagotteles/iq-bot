@@ -1,0 +1,13 @@
+('c:\\users\\bootcamp-thiago\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\websocket_client-0.56.0-py3.7.egg',
+ None,
+ {'*.py', 'EGG-INFO', '*.cp37-win_amd64.pyd', '*.pyc', '*.pyd', '*.pyw'},
+ 'DATA',
+ [('websocket\\cacert.pem',
+   'c:\\users\\bootcamp-thiago\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\websocket_client-0.56.0-py3.7.egg\\websocket\\cacert.pem',
+   'DATA'),
+  ('websocket\\tests\\data\\header01.txt',
+   'c:\\users\\bootcamp-thiago\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\websocket_client-0.56.0-py3.7.egg\\websocket\\tests\\data\\header01.txt',
+   'DATA'),
+  ('websocket\\tests\\data\\header02.txt',
+   'c:\\users\\bootcamp-thiago\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\websocket_client-0.56.0-py3.7.egg\\websocket\\tests\\data\\header02.txt',
+   'DATA')])

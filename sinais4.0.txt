@@ -1,8 +1,8 @@
 [
-{ "par": "USDJPY", "horario": "15:20", "tempo": "5", "estrategia": "MINORIA_ULTIMAS_3", "valor": "2", "gale1": "19", "gale2": "40"},
-{ "par": "GBPJPY", "horario": "15:30", "tempo": "5", "estrategia": "MAIORIA_ULTIMAS_3", "valor": "2", "gale1": "19", "gale2": "40"},
-{ "par": "USDJPY", "horario": "15:40", "tempo": "5", "estrategia": "MINORIA_ULTIMAS_5", "valor": "2", "gale1": "19", "gale2": "40"},
-{ "par": "GBPJPY", "horario": "16:00 ", "tempo": "5", "estrategia": "MAIORIA_ULTIMAS_5", "valor": "2", "gale1": "19", "gale2": "40"},
+{ "par": "USDJPY", "horario": "17:25", "tempo": "5", "estrategia": "MINORIA_ULTIMAS_3", "valor": "2", "gale1": "19", "gale2": "40"},
+{ "par": "GBPJPY", "horario": "17:10", "tempo": "5", "estrategia": "MAIORIA_ULTIMAS_3", "valor": "2", "gale1": "19", "gale2": "40"},
+{ "par": "USDJPY", "horario": "16:40", "tempo": "5", "estrategia": "MINORIA_ULTIMAS_5", "valor": "2", "gale1": "19", "gale2": "40"},
+{ "par": "GBPJPY", "horario": "16:55", "tempo": "5", "estrategia": "MAIORIA_ULTIMAS_5", "valor": "2", "gale1": "19", "gale2": "40"},
 
 
 { "par": "EURUSD", "horario": "19:00", "estrategia": "MHI_MENOR", "tempo": "5", "valor": "0", "gale1": "20", "gale2": "40" }

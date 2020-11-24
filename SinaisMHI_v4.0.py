@@ -77,9 +77,9 @@ print(Fore.MAGENTA +  '''
  ------------------------------------------------------------------------
 ''')
 
-email = 'thiagojames_@hotmail.com' #input(' Qual seu email: ')
-senha = 'D0natell@20' #input(' Qual sua senha: ')
-balance = 'PRACTICE' #input(' Quer operar aonde (REAL | PRACTICE): ').upper()
+email = input(' Qual seu email: ')
+senha = input(' Qual sua senha: ')
+balance = input(' Quer operar aonde (REAL | PRACTICE): ').upper()
 
 API = IQ_Option(email, senha)
 API.connect()
