@@ -1,0 +1,22 @@
+[
+{ "par": "AUDCAD", "horario": "01:50", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "EURUSD", "horario": "02:50", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDJPY", "horario": "03:20", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "EURGBP", "horario": "06:55", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "USDJPY", "horario": "08:00", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "EURUSD", "horario": "11:25", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "EURUSD", "horario": "12:15", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "USDJPY", "horario": "13:15", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "GBPJPY", "horario": "14:15", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDUSD", "horario": "21:45", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDUSD", "horario": "22:00", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDJPY", "horario": "22:25", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDJPY", "horario": "22:30", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "EURGBP", "horario": "22:40", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDJPY", "horario": "23:20", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+{ "par": "AUDJPY", "horario": "23:25", "tempo": "5", "estrategia": "MHI_MENOR", "valor": "0", "gale1": "19", "gale2": "0"},
+
+
+{ "par": "EURUSD", "horario": "19:00", "estrategia": "MHI_MENOR", "tempo": "5", "valor": "0", "gale1": "20", "gale2": "40" }
+
+]

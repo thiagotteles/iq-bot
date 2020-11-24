@@ -1,0 +1,5 @@
+('c:\\users\\bootcamp-thiago\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\six-1.15.0-py3.7.egg',
+ None,
+ {'*.py', 'EGG-INFO', '*.pyw', '*.pyd', '*.pyc', '*.cp37-win_amd64.pyd'},
+ 'DATA',
+ [])
