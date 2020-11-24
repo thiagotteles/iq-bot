@@ -8,7 +8,16 @@ EXEC spCatalogar_5M_MINORIA_ULTIMAS_5
 EXEC spCatalogar_5M_MAIORIA_ULTIMAS_5
  
 
-IGUAL_ANTERIOR
+SELECT distinct estrategia, tempo FROM estrategias
+
+SELECT distinct estrategia, tempo FROM sinais
+
+exec spSinais 5, 'MINORIA_ULTIMAS_3'
+exec spSinais 5, 'MAIORIA_ULTIMAS_3'
+exec spSinais 5, 'MINORIA_ULTIMAS_5'
+exec spSinais 5, 'MAIORIA_ULTIMAS_5'
+exec spSinais 15, 'MINORIA_ULTIMAS_3'
+exec spSinais 15, 'MAIORIA_ULTIMAS_3'
 
 SELECT * FROM sinais
 order by hora

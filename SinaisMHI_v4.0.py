@@ -18,7 +18,7 @@ init(convert=True, autoreset=True)
 def stop(lucro, gain, loss):
 	if lucro >= float(abs(gain)):
 		print('Stop Gain Batido!')
-		sys.exit()
+		time.sleep(86400) #sys.exit()
 
 def Martingale(index, gale1, gale2):
 	if index == 0 and tipo_mhi == 1:
@@ -45,7 +45,6 @@ def Payout(par):
 
 noticias = []
 def CarregarNoticias():
-	noticias.append({'par': 'EURUSD', 'horario': '2020-11-23 14:00:00', 'impacto': '2'})
 	print(Fore.CYAN +' carregando noticias')
 	headers = requests.utils.default_headers()
 	headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0'})
@@ -78,9 +77,9 @@ print(Fore.MAGENTA +  '''
  ------------------------------------------------------------------------
 ''')
 
-email = input(' Qual seu email: ')
-senha = input(' Qual sua senha: ')
-balance = input(' Quer operar aonde (REAL | PRACTICE): ').upper()
+email = 'thiagojames_@hotmail.com' #input(' Qual seu email: ')
+senha = 'D0natell@20' #input(' Qual sua senha: ')
+balance = 'PRACTICE' #input(' Quer operar aonde (REAL | PRACTICE): ').upper()
 
 API = IQ_Option(email, senha)
 API.connect()
@@ -90,7 +89,7 @@ if API.check_connect():
 else:
 	print(' \n Erro ao conectar')
 	input('\n\n Aperte enter para sair')
-	sys.exit()
+	time.sleep(86400) #sys.exit()
 
 API.change_balance(balance) # PRACTICE / REAL
 
@@ -135,9 +134,9 @@ while True:
 				if tipo_mhi == 1:
 					dtSinal = dtSinal - timedelta(minutes=1)
 				if tipo_mhi == 2:
-					dtSinal = dtSinal + timedelta(minutes=4)
+					dtSinal = dtSinal + timedelta(minutes= 4 if tempo == 5 else 14)
 				if tipo_mhi == 3:
-					dtSinal = dtSinal + timedelta(minutes=9)
+					dtSinal = dtSinal + timedelta(minutes= 9 if tempo == 5 else 29)
 				
 				if dtSinal.hour == datetime.now().hour and dtSinal.minute == datetime.now().minute: 
 					par = op['par']
@@ -145,6 +144,7 @@ while True:
 					gale1 = float(op['gale1'])
 					gale2 = float(op['gale2'])
 					estrategia = op['estrategia']
+					velasAdd = 2 if estrategia.find('5') > -1 else 0
 
 					if tipo_mhi == 3:
 						valor_entrada_b = gale2 + valorSoros if valorSoros > 0 else gale2
@@ -152,7 +152,7 @@ while True:
 						valor_entrada_b = gale1 + (0.32 * valorSoros) if valorSoros > 0 else gale1
 						gale2 = gale2 + (0.68 * valorSoros) if valorSoros > 0 else gale2
 					elif tipo_mhi == 1:
-						valor_entrada_b = valor_entrada_b + (0.13 * valorSoros) if valorSoros > 0 else 0
+						valor_entrada_b = valor_entrada_b + (0.13 * valorSoros) if valorSoros > 0 else valor_entrada_b
 						gale1 = gale1 + (0.28 * valorSoros) if valorSoros > 0 else gale1
 						gale2 = gale2 + (0.59 * valorSoros) if valorSoros > 0 else gale2
 
@@ -190,19 +190,23 @@ while True:
 							entradaPermitida = False
 							print('Analisando as cores', par, datetime.now())
 							
-							velas = API.get_candles(par, tempo * 60, 2 + tipo_mhi, time.time())
+							velas = API.get_candles(par, tempo * 60, 2 + tipo_mhi + velasAdd, time.time())
 							velas[0] = 'g' if velas[0]['open'] < velas[0]['close'] else 'r' if velas[0]['open'] > velas[0]['close'] else 'd'
 							velas[1] = 'g' if velas[1]['open'] < velas[1]['close'] else 'r' if velas[1]['open'] > velas[1]['close'] else 'd'
 							velas[2] = 'g' if velas[2]['open'] < velas[2]['close'] else 'r' if velas[2]['open'] > velas[2]['close'] else 'd'
 							
-							cores = velas[0] + ' ' + velas[1] + ' ' + velas[2]		
+							if velasAdd == 2:
+								velas[3] = 'g' if velas[3]['open'] < velas[3]['close'] else 'r' if velas[3]['open'] > velas[3]['close'] else 'd'
+								velas[4] = 'g' if velas[4]['open'] < velas[4]['close'] else 'r' if velas[4]['open'] > velas[4]['close'] else 'd'
+							
+							cores = velas[0] + ' ' + velas[1] + ' ' + velas[2] if velasAdd == 0 else velas[0] + ' ' + velas[1] + ' ' + velas[2] + ' ' + velas[3] + ' ' + velas[4] 	
 							print(cores)
 
-							if estrategia.upper() == "MHI_MENOR":
+							if estrategia.upper().find('MINORIA') > -1:
 								if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = ('put')
 								if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = ('call')
 
-							elif estrategia.upper() == "MHI_MAIOR":
+							elif estrategia.upper().find('MAIORIA') > -1:
 								if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = ('call')
 								if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = ('put')
 
@@ -212,18 +216,27 @@ while True:
 							if tipo_mhi == 1:
 									entradaPermitida = True
 							if tipo_mhi == 2:
-								velas[3] = 'call' if velas[3]['open'] < velas[3]['close'] else 'put' if velas[3]['open'] > velas[3]['close'] else 'put'
-								if dir != velas[3]:
+								idx = 3
+								if velasAdd == 2:
+									idx = 5
+								
+								velas[idx] = 'call' if velas[idx]['open'] < velas[idx]['close'] else 'put' if velas[idx]['open'] > velas[idx]['close'] else 'put'
+								
+								if dir != velas[idx]:
 									entradaPermitida = True
 									print(Fore.GREEN + 'Permitido entrada no 1 Gale')
 								else:
 									entradaPermitida = False
 									print(Fore.YELLOW + 'Nao entrou, deu win de primeira')
 							if tipo_mhi == 3:
-								velas[3] = 'call' if velas[3]['open'] < velas[3]['close'] else 'put' if velas[3]['open'] > velas[3]['close'] else 'put'
-								velas[4] = 'call' if velas[4]['open'] < velas[4]['close'] else 'put' if velas[4]['open'] > velas[4]['close'] else 'put'
+								idx = 3
+								if velasAdd == 2:
+									idx = 5
+
+								velas[idx] = 'call' if velas[idx]['open'] < velas[idx]['close'] else 'put' if velas[idx]['open'] > velas[idx]['close'] else 'put'
+								velas[idx + 1] = 'call' if velas[idx + 1]['open'] < velas[idx + 1]['close'] else 'put' if velas[idx + 1]['open'] > velas[idx + 1]['close'] else 'put'
 								
-								if dir != velas[3] and dir != velas[4]:
+								if dir != velas[idx] and dir != velas[idx + 1]:
 									entradaPermitida = True
 									print(Fore.GREEN +'Permitido entrada no 2 Gale')
 								else:
@@ -277,7 +290,7 @@ while True:
 
 													if qtdLoss == 0:
 														print(Back.RED + 'Quantidade de loss batida')
-														sys.exit()
+														time.sleep(86400) #sys.exit()
 
 												stop(lucro, stop_gain, 0)
 												break

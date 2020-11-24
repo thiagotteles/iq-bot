@@ -1,3 +1,11 @@
 Python 3.7
 pip install bs4
 pip install installer
+pip install colorama
+
+O que eu preciso pro profissional
+Angular
+.net
+Microservicos
+
+Amazon ()
