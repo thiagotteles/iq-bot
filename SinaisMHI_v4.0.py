@@ -60,8 +60,8 @@ def CarregarNoticias():
 			impacto = str((blocos2.find('td', {'class': 'sentiment'})).get('data-img_key')).replace('bull', '')
 			horario = str(blocos2.get('data-event-datetime')).replace('/', '-')
 			moeda = (blocos2.find('td', {'class': 'left flagCur noWrap'})).text.strip()
-			
-			noticias.append({'par': moeda, 'horario': horario, 'impacto': impacto})
+			evento = (blocos2.find('td', {'class': 'left event'})).text.strip()
+			noticias.append({'evento': evento, 'par': moeda, 'horario': horario, 'impacto': impacto})
 
 def temNoticiaAgora(now, start, end):
 	if start <= end:
@@ -167,7 +167,7 @@ while True:
 								dt = datetime.strptime(noticia['horario'], '%Y-%m-%d %H:%M:%S')
 								if temNoticiaAgora(dtConsultaSinal, dt - timedelta(minutes=30), dt + timedelta(minutes=30)) and par.find(noticia['par']) > -1 and int(noticia['impacto']) > 1:
 									noticiaVerificada = True
-									print(Fore.YELLOW + 'tem noticia proxima PAR: ', noticia['par'],' HORARIO: ', noticia['horario'], ' IMPACTO: ', noticia['impacto'], '\n')
+									print(Fore.YELLOW + noticia['evento'], noticia['par'],' HORARIO: ', noticia['horario'], ' IMPACTO: ', noticia['impacto'], '\n')
 									temNoticia = True
 								else:
 									noticiaVerificada = True

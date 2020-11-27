@@ -7,10 +7,15 @@ EXEC spCatalogar_5M_TRES_VIZINHOS
 EXEC spCatalogar_5M_MINORIA_ULTIMAS_5
 EXEC spCatalogar_5M_MAIORIA_ULTIMAS_5
  
+delete a
+from estrategias a
+inner join noticias on 
+		   a.par like '%' + moeda + '%'
+	   and CAST(data AS DATETIME) + CAST(hora AS DATETIME) between DATEADD(MINUTE, -30, horario) and  DATEADD(MINUTE, 30, horario)
+	   and impacto > 1
 
-SELECT distinct estrategia, tempo FROM estrategias
 
-SELECT distinct estrategia, tempo FROM sinais
+
 
 exec spSinais 5, 'MINORIA_ULTIMAS_3'
 exec spSinais 5, 'MAIORIA_ULTIMAS_3'
@@ -20,7 +25,7 @@ exec spSinais 15, 'MINORIA_ULTIMAS_3'
 exec spSinais 15, 'MAIORIA_ULTIMAS_3'
 
 SELECT * FROM sinais
-order by hora
+--order by hora
 order by dias - loss desc
 
 declare @valor varchar(10) = 2
@@ -45,5 +50,10 @@ AND (hora < '17:30' or hora > '21:30')
 order by hora
 
 
+
+
+
+
+select * from estrategias
 
 
