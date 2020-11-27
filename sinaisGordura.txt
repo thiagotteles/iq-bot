@@ -1,9 +1,0 @@
-[
-{ "par": "EURUSD", "hora": "11", "minuto" : "30" },
-{ "par": "EURUSD", "hora": "12", "minuto" : "15" },
-{ "par": "USDJPY", "hora": "8", "minuto" : "00" },
-{ "par": "USDJPY", "hora": "13", "minuto" : "15" },
-{ "par": "GBPJPY", "hora": "14", "minuto" : "15" }
-]
-
-

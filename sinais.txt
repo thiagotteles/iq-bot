@@ -1,8 +1,0 @@
-[
-{ "par": "EURGBP", "horario": "10:10", "tempo": "5", "estrategia": "MHI_MAIOR", "valor": "2", "gale1": "9", "gale2": "17"},
-{ "par": "USDJPY", "horario": "10:40", "tempo": "5", "estrategia": "PUT", "valor": "9", "gale1": "20", "gale2": "0" },
-{ "par": "GBPUSD", "horario": "06:40", "tempo": "5", "estrategia": "PUT", "valor": "46", "gale1": "97", "gale2": "0" }
-
-]
-
-
