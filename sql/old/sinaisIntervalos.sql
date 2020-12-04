@@ -1,89 +1,97 @@
 set dateformat dmy
-declare @dataInicial datetime =  '01/05/2020'
+	declare @dtInicial datetime ='01/01/2020'
+	declare @tempo int = 5
+	declare @estrategia  varchar(100) = 'MINORIA_ULTIMAS_3'
 
 
-declare @tb table (id int identity(1,1), par varchar(20), hora time)
+	declare @tb table (par varchar(10), hora time, diasAntePenultimo int, diasPenultimo int, diasUltimo int, ultLoss date)
 
-insert into @tb (par, hora)
-select distinct par, hora from mhi5m
-order by par, hora
+	declare @pares table (id int identity(1,1), par varchar(10))
 
-declare @i int = 1
+	insert into @pares (par)
+	select distinct par from velaM5
 
-while @i <= (select COUNT(*) from @tb)
-begin
-	declare @par varchar(20) = 'EURUSD'
-	declare @hora time = '12:15'
+	declare @ip int = 1
 
-	select @par = par,
-		   @hora = hora
-	from @tb
-	where id = @i
-
-
-
-	--select * from mhi5m
-	--where par =	@par and hora = @hora and resultado = 'loss' and data > @dataInicial
-
-	declare @tbDias table (id int identity(1,1),data date)
-	insert into @tbDias (data)
-	select data from mhi5m
-	where par =	@par and hora = @hora and resultado = 'loss' and data > @dataInicial
-
-	declare @d int = 1
-	declare @minDias int = 999999
-	declare @sumDias int = 0
-	declare @medDias int = 0
-	declare @dias int = 0
-	declare @diasSemLoss int = 0
-
-	while @d <= (select count(*) from @tbDias )
+	while @ip <= (select count(*) from @pares)
 	begin
-		--set @minDias = 999999
-		--set @sumDias = 0
-		--set @medDias = 0
-		--set @dias = 0
-		--set @diasSemLoss = 0
+		declare @par varchar(10) = (select par from @pares where id = @ip)
 
-		select @dias = DATEDIFF(DAY, b.data, a.data)
-		from @tbDias a,
-				@tbDias b 
-		where a.id = @d and b.id = @d - 1
+		declare @hora time = '00:30'
 
-		if (@d = (select count(*) from @tbDias))
+		set nocount on
+
+		while @hora >= '00:30'
 		begin
-			select @dias = DATEDIFF(DAY, a.data, getdate())
-			from @tbDias a
-			where a.id = @d 
+			declare @ultLoss date 
+			declare @penultimoLoss date
+			declare @antePenultimoLoss date
 
-			set @diasSemLoss = @dias
+			select top 1 @ultLoss = data from estrategias
+			where par = @par and
+				  tempo = @tempo and
+				  hora = @hora and
+				  estrategia = @estrategia and 
+				  resultado = 'loss'
+				  and DATEPART(dw, data) not in (1,7)
+			order by data desc
+
+			select top 1 @penultimoLoss = data from estrategias
+			where par = @par and
+				  tempo = @tempo and
+				  hora = @hora and
+				  estrategia = @estrategia and 
+				  resultado = 'loss' and
+				  data < @ultLoss
+				  and DATEPART(dw, data) not in (1,7)
+			order by data desc
+
+			select top 1 @antePenultimoLoss = data from estrategias
+			where par = @par and
+				  tempo = @tempo and
+				  hora = @hora and
+				  estrategia = @estrategia and 
+				  resultado = 'loss' and
+				  data < @penultimoLoss and
+				  DATEPART(dw, data) not in (1,7)
+			order by data desc
+
+			declare @diasAntePenultimo int = DATEDIFF(DAY, @antePenultimoLoss, @penultimoLoss)
+			declare @diasPenultimo int = DATEDIFF(DAY, @penultimoLoss, @ultLoss)
+			declare @diasUltimo int = DATEDIFF(DAY, @ultLoss, getdate())
+
+			if (@diasAntePenultimo > 1 and @diasPenultimo > 1) 
+			   and (@diasUltimo < ( @diasAntePenultimo + @diasPenultimo) / 2)
+			begin
+				insert into @tb (par, hora, diasAntePenultimo, diasPenultimo, diasUltimo, ultLoss)
+				select @par, @hora, @diasAntePenultimo, @diasPenultimo, @diasUltimo, @ultLoss
+			end
+
+
+
+			set @hora = dateadd(MINUTE, 5, @hora)
 		end
 
-		if @minDias > @dias and @dias > 0
-		   set @minDias = @dias
-
-		set @sumDias += @dias
-
-		set @medDias = @sumDias / (select count(*) from @tbDias) 
-
-		
-
-		set @d += 1
+		set @ip += 1
 	end
+	set nocount off
 
-	insert into sinaisIntervalosMHI5 values (@par, @hora, @minDias, @medDias, @diasSemLoss, @sumDias)
-
-	set @i += 1
-end
-
-select * from sinaisIntervalosMHI5
-
--- truncate table sinaisIntervalosMHI5
-
---print 'min: ' + convert(varchar(10), @minDias)
---print 'sum: ' + convert(varchar(10), @sumDias)
---print 'med: ' + convert(varchar(10), @medDias)
---print 'sem: ' + convert(varchar(10), @diasSemLoss)
---print '-------------------------------------------'
+	print @dtInicial
 
 
+
+	select
+@estrategia,  @tempo, par, convert(varchar(5), hora), diasAntePenultimo, diasPenultimo, diasUltimo, convert(varchar(10), ultLoss, 103) as ultLoss
+,convert(varchar(5), hora) + ';' + convert(varchar(3), par) + '/' + substring(par, 4,3) + ';' + 
+@estrategia + ';' + convert(varchar(10), @tempo) as b2IQ,
+ '{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(10),@tempo) +'"
+ , "estrategia": "' + UPPER(@estrategia) +  
+	'", "valor": "0'+
+	'", "gale1": "0'+
+	'", "gale2": "0'+
+	'"},' as roboThiago
+
+	from @tb a
+	where ((diasAntePenultimo + diasPenultimo) / 2) - diasUltimo  > 20
+	order by 
+	((diasAntePenultimo + diasPenultimo) / 2) - diasUltimo desc

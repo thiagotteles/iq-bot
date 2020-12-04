@@ -165,7 +165,7 @@ while True:
 						if noticiaVerificada == False:
 							for noticia in noticias:
 								dt = datetime.strptime(noticia['horario'], '%Y-%m-%d %H:%M:%S')
-								if temNoticiaAgora(dtConsultaSinal, dt - timedelta(minutes=30), dt + timedelta(minutes=30)) and par.find(noticia['par']) > -1 and int(noticia['impacto']) > 1:
+								if temNoticiaAgora(dtConsultaSinal, dt - timedelta(minutes=30), dt + timedelta(minutes=30)) and par.find(noticia['par']) > -1 and int(noticia['impacto']) > 0:
 									noticiaVerificada = True
 									print(Fore.YELLOW + noticia['evento'], noticia['par'],' HORARIO: ', noticia['horario'], ' IMPACTO: ', noticia['impacto'], '\n')
 									temNoticia = True

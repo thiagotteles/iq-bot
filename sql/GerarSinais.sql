@@ -12,10 +12,9 @@ from estrategias a
 inner join noticias on 
 		   a.par like '%' + moeda + '%'
 	   and CAST(data AS DATETIME) + CAST(hora AS DATETIME) between DATEADD(MINUTE, -30, horario) and  DATEADD(MINUTE, 30, horario)
-	   and impacto > 1
+	   and impacto > 0
 
-
-
+	   
 
 exec spSinais 5, 'MINORIA_ULTIMAS_3'
 exec spSinais 5, 'MAIORIA_ULTIMAS_3'
@@ -38,7 +37,8 @@ select
 estrategia,  tempo, par, convert(varchar(5), hora), win0mg, win1mg, win2mg, skip, dias, dias-loss as dif, loss, convert(varchar(10), ultLoss, 103) as ultLoss
 ,convert(varchar(5), hora) + ';' + convert(varchar(3), par) + '/' + substring(par, 4,3) + ';' + 
 estrategia + ';' + convert(varchar(10), tempo) as b2IQ,
- '{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(10),tempo) +'", "estrategia": "' + UPPER(estrategia) +  
+ '{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(10),tempo) +'"
+ , "estrategia": "' + UPPER(estrategia) +  
 	'", "valor": "0'+
 	'", "gale1": "0'+
 	'", "gale2": "0'+

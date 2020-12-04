@@ -1,7 +1,7 @@
 set dateformat dmy
-	declare @dtInicial datetime ='01/10/2020'
-	declare @tempo int = 5 
-	declare @estrategia  varchar(10) = 'MHI_MENOR'
+	declare @dtInicial datetime ='01/01/2020'
+	declare @tempo int = 5
+	declare @estrategia  varchar(100) = 'MINORIA_ULTIMAS_3'
 
 
 	declare @tb table (par varchar(10), hora time, win0mg int, win1mg int, win2mg int, loss int, skip int, dias int, ultLoss datetime)
@@ -17,11 +17,11 @@ set dateformat dmy
 	begin
 		declare @par varchar(10) = (select par from @pares where id = @ip)
 
-		declare @hora time = '00:15'
+		declare @hora time = '00:30'
 
 		set nocount on
 
-		while @hora >= '00:15'
+		while @hora >= '00:30'
 		begin
 			declare @win0mg int = 0
 			declare @win1mg int = 0
@@ -86,6 +86,17 @@ set dateformat dmy
 
 
 
-	select a.par, a.hora, a.win0mg, a.win1mg, a.win2mg, a.loss, a.skip, a.dias, a.ultLoss, @dtInicial
+	select
+@estrategia,  @tempo, par, convert(varchar(5), hora), win0mg, win1mg, win2mg, skip, dias, dias/(loss + 1) as dif, loss, convert(varchar(10), ultLoss, 103) as ultLoss,
+'','','','','',
+ '{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(10),@tempo) +'"
+ , "estrategia": "' + UPPER(@estrategia) +  
+	'", "valor": "0'+
+	'", "gale1": "0'+
+	'", "gale2": "0'+
+	'"},' as roboThiago
+
 	from @tb a
-	order by ultLoss
+	order by 
+	--dias + 1 / loss + 1 desc
+	convert(datetime,convert(varchar(10), ultLoss, 103)) asc
