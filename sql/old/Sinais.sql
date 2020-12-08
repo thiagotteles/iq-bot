@@ -1,15 +1,15 @@
 set dateformat dmy
 	declare @dtInicial datetime ='01/01/2020'
-	declare @tempo int = 5
-	declare @estrategia  varchar(100) = 'MINORIA_ULTIMAS_3'
-
+	declare @tempo int = 15
+	declare @estrategia  varchar(100) = 'CALL'
+	declare @impacto int = 0
 
 	declare @tb table (par varchar(10), hora time, win0mg int, win1mg int, win2mg int, loss int, skip int, dias int, ultLoss datetime)
 
 	declare @pares table (id int identity(1,1), par varchar(10))
 
 	insert into @pares (par)
-	select distinct par from velaM5
+	select distinct par from velaM15
 
 	declare @ip int = 1
 
@@ -35,47 +35,55 @@ set dateformat dmy
 			where par = @par and hora = @hora and resultado = 'win' and martinGale = 0 and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @win1mg = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'win' and martinGale = 1 and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @win2mg = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'win' and martinGale = 2 and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @loss = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'loss' and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @skip = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'skip' and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @dias = count(*) from estrategias
 			where par = @par and hora = @hora  and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
 
 			select @dtUltLoss = max(data) from estrategias
 			where par = @par and hora = @hora  and resultado = 'loss' 
 			and tempo = @tempo
 			and estrategia = @estrategia
-			and DATEPART(dw, data) not in (1,7)
+			and DATEPART(dw, data) not in (7)
+			and (impactoNoticia is null or impactoNoticia <= @impacto)
+
 			insert into @tb values (@par, @hora, @win0mg, @win1mg, @win2mg, @loss, @skip, @dias, @dtUltLoss)
 
 
-			set @hora = dateadd(MINUTE, 5, @hora)
+			set @hora = dateadd(MINUTE, 30, @hora)
 		end
 
 		set @ip += 1
@@ -97,6 +105,8 @@ set dateformat dmy
 	'"},' as roboThiago
 
 	from @tb a
+
 	order by 
-	--dias + 1 / loss + 1 desc
+	--loss 
+	--dias/(loss + 1) desc
 	convert(datetime,convert(varchar(10), ultLoss, 103)) asc

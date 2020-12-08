@@ -22,7 +22,7 @@ while True:
 	
 	time.sleep(1)
 
-pares = ['EURUSD', 'EURJPY', 'USDJPY', 'GBPJPY','AUDUSD', 'EURGBP','GBPUSD','EURCAD']
+pares = ['EURUSD', 'EURCAD', 'AUDUSD', 'USDCAD', 'EURGBP', 'GBPUSD', 'GBPJPY', 'GBPAUD', 'AUDCAD']
 # pares = ['EURUSD']
 # with open('PARES_M15.sql', 'w') as f:
 for par in pares:
@@ -30,7 +30,7 @@ for par in pares:
     total = []
     tempo = time.time()
 
-    for i in range(120):
+    for i in range(60):
         X = API.get_candles(par, 300, 1000, tempo)
         total = X+total
         tempo = int(X[0]['from'])-1
@@ -48,7 +48,7 @@ for par in pares:
     total = []
     tempo = time.time()
     
-    for j in range(120):
+    for j in range(60):
         Z = API.get_candles(par, 900, 300, tempo)
         total = Z+total
         tempo = int(Z[0]['from'])-1
