@@ -14,6 +14,16 @@ from colorama import init, Fore, Back, Style
 init(convert=True, autoreset=True)
 
 #region defs
+def Tendencia(velas, i, count):
+    if i <= count:
+        return ''
+    
+    ultimo = round(velas[i - count]['close'], 4)
+    primeiro = round(velas[i - 1]['close'], 4)
+    
+    diferenca = abs( round( ( (ultimo - primeiro) / primeiro ) * 100, 5) )
+    return "call" if ultimo < primeiro and diferenca > 0.01 else "put" if ultimo > primeiro and diferenca > 0.01 else ''
+
 
 def stop(lucro, gain, loss):
 	if lucro >= float(abs(gain)):
@@ -122,7 +132,7 @@ while True:
 		
 		print (Fore.BLUE + 'Verificando...  ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), end="", flush=True)
 		print("\r", end="", flush=True)
-		with open('sinais4.0.txt') as json_file:
+		with open('sinais5.0.txt') as json_file:
 			dados = json.load(json_file)
 
 			for op in dados:
@@ -174,20 +184,15 @@ while True:
 									temNoticia = True
 								else:
 									noticiaVerificada = True
-						
+
 						if temNoticia:
+							time.sleep(0.5)
 							break
 
 						if tendenciaVerificada == False:
-							velasTendencia = API.get_candles(par, (int(tempo) * 60), 36,  time.time())
-
-							ultimo = round(velasTendencia[0]['close'], 4)
-							primeiro = round(velasTendencia[-1]['close'], 4)
-
-							diferenca = abs( round( ( (ultimo - primeiro) / primeiro ) * 100, 3) )
-							MacroTendencia = "call" if ultimo < primeiro and diferenca > 0.01 else "put" if ultimo > primeiro and diferenca > 0.01 else False
-														
-
+							velasTendencia = API.get_candles(par, (int(tempo) * 60), 37,  time.time())
+							MacroTendencia = Tendencia(velasTendencia, 36, 36)								
+							MicroTendencia = Tendencia(velasTendencia, 36, 6)	
 						
 						if payoutVerificado == False:
 							payout = Payout(par)
@@ -201,6 +206,8 @@ while True:
 
 						
 						if datetime.now().second > 58.5:
+
+
 							entradaPermitida = False
 							print('Analisando as cores', par, datetime.now())
 							
@@ -260,6 +267,11 @@ while True:
 
 							if dir != 'call' and dir != 'put':
 								print('dogi, nao entrar')
+								entradaPermitida = False
+
+
+							if dir != MacroTendencia and dir != MicroTendencia:
+								print(Fore.YELLOW + 'contra tendencia, nao entrar')
 								entradaPermitida = False
 
 							if dir and entradaPermitida:

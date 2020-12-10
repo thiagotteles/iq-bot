@@ -1,14 +1,14 @@
 
 exec spCatalogar_5M_MHI_MENOR
 exec spCatalogar_15M_MHI_MENOR
-EXEC spCatalogar_5M_MINORIA_ULTIMAS_5
+
 
 exec spCatalogar_5M_CALL
 exec spCatalogar_5M_PUT
 exec spCatalogar_15M_CALL
 exec spCatalogar_15M_PUT
 
-
+EXEC spCatalogar_5M_MINORIA_ULTIMAS_5
 exec spCatalogar_5M_MHI_MAIOR
 exec spCatalogar_15M_MHI_MAIOR
 EXEC spCatalogar_5M_TRES_VIZINHOS

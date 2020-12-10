@@ -1,8 +1,10 @@
 set dateformat dmy
-	declare @dtInicial datetime ='01/01/2020'
-	declare @tempo int = 15
-	declare @estrategia  varchar(100) = 'CALL'
+	declare @dtInicial datetime ='01/01/2019'
+	declare @tempo int = 5
+	declare @estrategia  varchar(100) = 'PUT'
 	declare @impacto int = 0
+	declare @macroTendencia int = 1
+	declare @microTendencia int = 1
 
 	declare @tb table (par varchar(10), hora time, win0mg int, win1mg int, win2mg int, loss int, skip int, dias int, ultLoss datetime)
 
@@ -37,6 +39,8 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @win1mg = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'win' and martinGale = 1 and data >= @dtInicial
@@ -44,6 +48,8 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @win2mg = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'win' and martinGale = 2 and data >= @dtInicial
@@ -51,6 +57,8 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @loss = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'loss' and data >= @dtInicial
@@ -58,6 +66,8 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @skip = count(*) from estrategias
 			where par = @par and hora = @hora and resultado = 'skip' and data >= @dtInicial
@@ -65,6 +75,8 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @dias = count(*) from estrategias
 			where par = @par and hora = @hora  and data >= @dtInicial
@@ -72,18 +84,22 @@ set dateformat dmy
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			select @dtUltLoss = max(data) from estrategias
-			where par = @par and hora = @hora  and resultado = 'loss' 
+			where par = @par and hora = @hora and resultado = 'loss' and data >= @dtInicial
 			and tempo = @tempo
 			and estrategia = @estrategia
 			and DATEPART(dw, data) not in (7)
 			and (impactoNoticia is null or impactoNoticia <= @impacto)
+			and ((@macroTendencia = 1 AND macroTendencia = dir) or @macroTendencia <> 1)
+			and ((@microTendencia = 1 AND microTendencia = dir) or @microTendencia <> 1)
 
 			insert into @tb values (@par, @hora, @win0mg, @win1mg, @win2mg, @loss, @skip, @dias, @dtUltLoss)
 
 
-			set @hora = dateadd(MINUTE, 30, @hora)
+			set @hora = dateadd(MINUTE, 5, @hora)
 		end
 
 		set @ip += 1
@@ -95,14 +111,14 @@ set dateformat dmy
 
 
 	select
-@estrategia,  @tempo, par, convert(varchar(5), hora), win0mg, win1mg, win2mg, skip, dias, dias/(loss + 1) as dif, loss, convert(varchar(10), ultLoss, 103) as ultLoss,
-'','','','','',
- '{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(10),@tempo) +'"
+@estrategia,  @tempo, par, convert(varchar(5), hora), win0mg, win1mg, win2mg, skip, dias, dias/(loss + 1) as dif, loss, convert(varchar(10), ultLoss, 103) as ultLoss
+--'','','','',''
+,'{ "par": "' + par + '", "horario": "'+ convert(varchar(5), hora) +'", "tempo": "' + convert(varchar(2),@tempo) +'"
  , "estrategia": "' + UPPER(@estrategia) +  
-	'", "valor": "0'+
-	'", "gale1": "0'+
-	'", "gale2": "0'+
-	'"},' as roboThiago
+'", "valor": "0'+
+'", "gale1": "0'+
+'", "gale2": "0'+
+'"},' as roboThiago
 
 	from @tb a
 
