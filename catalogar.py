@@ -40,7 +40,7 @@ for par in pares:
     total = []
     tempo = time.time()
 
-    for i in range(200):
+    for i in range(100):
         X = API.get_candles(par, 300, 1000, tempo)
         total = X+total
         tempo = int(X[0]['from'])-1
@@ -65,7 +65,7 @@ for par in pares:
     total = []
     tempo = time.time()
     
-    for j in range(200):
+    for j in range(100):
         Z = API.get_candles(par, 900, 300, tempo)
         total = Z+total
         tempo = int(Z[0]['from'])-1

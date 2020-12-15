@@ -118,6 +118,20 @@ while True:
 	except:
 		print('\n Opção invalida')
 
+while True:
+	try:
+		filtroTendencia = input(' Filtrar tendencia?\n  S - Sim\n  N - Nao\n :: ').upper()
+		if filtroTendencia.upper() == 'S' and filtroTendencia.upper() == 'N' : break
+	except:
+		print('\n Opção invalida')
+
+while True:
+	try:
+		filtroNoticia = input(' Filtrar noticias?\n  S - Sim\n  N - Nao\n :: ').upper()
+		if filtroNoticia.upper() == 'S' and filtroNoticia.upper() == 'N' : break
+	except:
+		print('\n Opção invalida')
+
 noticias = []
 CarregarNoticias()
 horaVerificacao = datetime.now()
@@ -175,7 +189,7 @@ while True:
 					MicroTendencia = 'x'
 					print('\n' + par, ' na fila')
 					while dtSinal.hour == datetime.now().hour and dtSinal.minute == datetime.now().minute:
-						if noticiaVerificada == False:
+						if noticiaVerificada == False and filtroNoticia == 'S':
 							for noticia in noticias:
 								dt = datetime.strptime(noticia['horario'], '%Y-%m-%d %H:%M:%S')
 								if temNoticiaAgora(dtConsultaSinal, dt - timedelta(minutes=30), dt + timedelta(minutes=30)) and par.find(noticia['par']) > -1 and int(noticia['impacto']) > 0:
@@ -189,7 +203,7 @@ while True:
 							time.sleep(0.5)
 							break
 
-						if tendenciaVerificada == False:
+						if tendenciaVerificada == False and filtroTendencia == 'S':
 							velasTendencia = API.get_candles(par, (int(tempo) * 60), 37,  time.time())
 							MacroTendencia = Tendencia(velasTendencia, 36, 36)								
 							MicroTendencia = Tendencia(velasTendencia, 36, 6)	
@@ -270,7 +284,7 @@ while True:
 								entradaPermitida = False
 
 
-							if dir != MacroTendencia and dir != MicroTendencia:
+							if dir != MacroTendencia and dir != MicroTendencia and filtroTendencia == 'S':
 								print(Fore.YELLOW + 'contra tendencia, nao entrar')
 								entradaPermitida = False
 
