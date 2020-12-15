@@ -1,10 +1,10 @@
 set dateformat dmy
-	declare @dtInicial datetime ='01/01/2019'
+	declare @dtInicial datetime ='28/10/2020'
 	declare @tempo int = 5
-	declare @estrategia  varchar(100) = 'PUT'
-	declare @impacto int = 0
-	declare @macroTendencia int = 1
-	declare @microTendencia int = 1
+	declare @estrategia  varchar(100) = 'minoria_ultimas_3'
+	declare @impacto int = 3
+	declare @macroTendencia int = 0
+	declare @microTendencia int = 0
 
 	declare @tb table (par varchar(10), hora time, win0mg int, win1mg int, win2mg int, loss int, skip int, dias int, ultLoss datetime)
 
@@ -125,4 +125,4 @@ set dateformat dmy
 	order by 
 	--loss 
 	--dias/(loss + 1) desc
-	convert(datetime,convert(varchar(10), ultLoss, 103)) asc
+	convert(datetime,convert(varchar(10), ultLoss, 103)) asc, win2mg

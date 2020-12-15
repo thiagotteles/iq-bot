@@ -55,8 +55,8 @@ estrategia + ';' + convert(varchar(10), tempo) as b2IQ,
 	'"},' as roboThiago
 
 from sinais 
-where dias > 40
-AND (hora < '17:30' or hora > '21:30')
+where dias > 30 AND  loss < 5 and
+ (hora < '17:30' or hora > '21:30')
 order by hora
 
 select distinct moeda, horario, impacto from noticias
